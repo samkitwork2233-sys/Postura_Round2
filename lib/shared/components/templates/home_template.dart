@@ -14,6 +14,8 @@ class HomeTemplate extends StatelessWidget {
   final String angleText;
   final String deviationText;
   final String timerText;
+  final String scoreText;
+  final String labelScore;
   final bool isConnected;
   final String? deviceName;
   final String? deviceAddress;
@@ -30,6 +32,8 @@ class HomeTemplate extends StatelessWidget {
     required this.angleText,
     required this.deviationText,
     required this.timerText,
+    required this.scoreText,
+    required this.labelScore,
     required this.isConnected,
     this.deviceName,
     this.deviceAddress,
@@ -135,6 +139,20 @@ class HomeTemplate extends StatelessWidget {
             children: [
               Text("Session Timer", style: theme.textTheme.bodySmall),
               Text(timerText, style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 2)),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppConstants.spaceMD),
+        // Score Card
+        GlassCard(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Text(labelScore, style: theme.textTheme.bodySmall),
+              Text(scoreText, style: theme.textTheme.displaySmall?.copyWith(
+                fontWeight: FontWeight.bold, 
+                color: theme.colorScheme.primary,
+              )),
             ],
           ),
         ),

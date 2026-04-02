@@ -36,6 +36,8 @@ class HomeView extends ConsumerWidget {
         angleText: "${postureState.angle.toStringAsFixed(1)}°",
         deviationText: "${postureState.deviation.toStringAsFixed(1)}°",
         timerText: _formatDuration(postureState.sessionSeconds),
+        scoreText: "${postureState.score}%",
+        labelScore: HomeStrings.currentScore,
         isConnected: postureState.isConnected,
         deviceName: postureState.deviceName,
         deviceAddress: postureState.deviceAddress,

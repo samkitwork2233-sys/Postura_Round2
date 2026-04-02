@@ -9,16 +9,18 @@ class BleService {
 
   bool useMock = false; // Set to false to use real device
   final StreamController<String> _dataController = StreamController<String>.broadcast();
+  final StreamController<BluetoothConnectionState> _connectionStateController = StreamController<BluetoothConnectionState>.broadcast();
   BluetoothDevice? _device;
   BluetoothCharacteristic? _characteristic;
   StreamSubscription? _scanSubscription;
   StreamSubscription? _notifySubscription;
+  StreamSubscription? _connectionSubscription;
 
   String get connectedDeviceName => _device?.platformName ?? "";
   String get connectedDeviceAddress => _device?.remoteId.str ?? "";
 
   Stream<String> get dataStream => _dataController.stream;
-  Stream<BluetoothConnectionState> get connectionState => _device?.connectionState ?? const Stream.empty();
+  Stream<BluetoothConnectionState> get connectionState => _connectionStateController.stream;
 
   Future<bool> connect() async {
     // Bluetooth Adapter Verification
@@ -44,7 +46,12 @@ class BleService {
             await FlutterBluePlus.stopScan();
             _device = r.device;
             
-            // Connect to device
+            // Listen to device connection state
+            await _connectionSubscription?.cancel();
+            _connectionSubscription = _device!.connectionState.listen((state) {
+              _connectionStateController.add(state);
+            });
+
             // Connect to device (Free license for personal use)
             await _device!.connect(license: License.free);
             
@@ -91,9 +98,11 @@ class BleService {
   Future<void> disconnect() async {
     await _scanSubscription?.cancel();
     await _notifySubscription?.cancel();
+    await _connectionSubscription?.cancel();
     await _device?.disconnect();
     _device = null;
     _characteristic = null;
+    _connectionStateController.add(BluetoothConnectionState.disconnected);
   }
 
   Future<void> sendThreshold(int threshold) async {
@@ -109,6 +118,8 @@ class BleService {
   void dispose() {
     _scanSubscription?.cancel();
     _notifySubscription?.cancel();
+    _connectionSubscription?.cancel();
     _dataController.close();
+    _connectionStateController.close();
   }
 }

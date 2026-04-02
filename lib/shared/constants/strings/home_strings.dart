@@ -20,5 +20,6 @@ class HomeStrings {
   static const String scanning = "Scanning for Device...";
   static const String searching = "Searching for Postura...";
   static const String connecting = "Connecting...";
+  static const String currentScore = "Current Score";
   static const String connectionError = "Connection Failed. Try again.";
 }

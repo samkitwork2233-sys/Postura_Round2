@@ -79,9 +79,16 @@ class PostureState {
   }
 
   int get score {
-    final total = goodSeconds + badSeconds;
+    final total = sessionSeconds; // Use total session time
     if (total == 0) return 100;
-    return ((goodSeconds / total) * 100).round();
+    
+    // Base score: percentage of time in good posture
+    final double timeScore = (goodSeconds / total) * 100;
+    
+    // Penalty: penalize each slouch event
+    final double penalty = slouchCount * 2.0;
+    
+    return (timeScore - penalty).clamp(0, 100).round();
   }
 }
 
