@@ -7,12 +7,14 @@ class SettingsState {
   final double vibrationDuration;
   final bool soundEnabled;
   final ThemeMode themeMode;
+  final bool hasConnectedOnce;
 
   SettingsState({
     required this.threshold,
     required this.vibrationDuration,
     required this.soundEnabled,
     required this.themeMode,
+    required this.hasConnectedOnce,
   });
 
   SettingsState copyWith({
@@ -20,12 +22,14 @@ class SettingsState {
     double? vibrationDuration,
     bool? soundEnabled,
     ThemeMode? themeMode,
+    bool? hasConnectedOnce,
   }) {
     return SettingsState(
       threshold: threshold ?? this.threshold,
       vibrationDuration: vibrationDuration ?? this.vibrationDuration,
       soundEnabled: soundEnabled ?? this.soundEnabled,
       themeMode: themeMode ?? this.themeMode,
+      hasConnectedOnce: hasConnectedOnce ?? this.hasConnectedOnce,
     );
   }
 }
@@ -39,6 +43,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           vibrationDuration: _service.vibrationDuration,
           soundEnabled: _service.soundEnabled,
           themeMode: _parseThemeMode(_service.themeMode),
+          hasConnectedOnce: _service.hasConnectedOnce,
         ));
 
   static ThemeMode _parseThemeMode(String value) {
@@ -89,6 +94,11 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     } else {
       setThemeMode(ThemeMode.dark);
     }
+  }
+
+  Future<void> setHasConnectedOnce(bool value) async {
+    await _service.setHasConnectedOnce(value);
+    state = state.copyWith(hasConnectedOnce: value);
   }
 }
 

@@ -120,7 +120,11 @@ class PostureNotifier extends StateNotifier<PostureState> {
         deviceAddress: isConnected ? _bleService.connectedDeviceAddress : null,
       );
       if (isConnected) {
-        _bleService.sendThreshold(_threshold.toInt());
+        if (_settingsService.hasConnectedOnce) {
+          _bleService.sendThreshold(_threshold.toInt());
+        } else {
+          _settingsService.setHasConnectedOnce(true);
+        }
         _startTimer();
       } else {
         _stopTimer();

@@ -12,7 +12,7 @@ import 'package:postura/modules/storage/core/history_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Storage Initialization
   await Hive.initFlutter();
   final historyService = HistoryService();
