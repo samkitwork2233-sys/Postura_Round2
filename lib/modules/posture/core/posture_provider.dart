@@ -77,13 +77,13 @@ class PostureState {
   int get score {
     final total = sessionSeconds; // Use total session time
     if (total == 0) return 100;
-    
+
     // Base score: percentage of time in good posture
     final double timeScore = (goodSeconds / total) * 100;
-    
+
     // Penalty: penalize each slouch event
     final double penalty = slouchCount * 2.0;
-    
+
     return (timeScore - penalty).clamp(0, 100).round();
   }
 }
@@ -96,7 +96,12 @@ class PostureNotifier extends StateNotifier<PostureState> {
   Timer? _sessionTimer;
   double _threshold = 15.0;
 
-  PostureNotifier(this._bleService, this._historyService, this._alertService, this._settingsService) : super(PostureState()) {
+  PostureNotifier(
+    this._bleService,
+    this._historyService,
+    this._alertService,
+    this._settingsService,
+  ) : super(PostureState()) {
     _threshold = _settingsService.threshold;
     _init();
   }
@@ -109,7 +114,8 @@ class PostureNotifier extends StateNotifier<PostureState> {
       ConnectionStatus status = state.connectionStatus;
       if (isConnected) {
         status = ConnectionStatus.connected;
-      } else if (event == BluetoothConnectionState.disconnected && status != ConnectionStatus.searching) {
+      } else if (event == BluetoothConnectionState.disconnected &&
+          status != ConnectionStatus.searching) {
         status = ConnectionStatus.idle;
       }
 
@@ -120,11 +126,7 @@ class PostureNotifier extends StateNotifier<PostureState> {
         deviceAddress: isConnected ? _bleService.connectedDeviceAddress : null,
       );
       if (isConnected) {
-        if (_settingsService.hasConnectedOnce) {
-          _bleService.sendThreshold(_threshold.toInt());
-        } else {
-          _settingsService.setHasConnectedOnce(true);
-        }
+        _bleService.sendThreshold(_threshold.toInt());
         _startTimer();
       } else {
         _stopTimer();
@@ -137,20 +139,18 @@ class PostureNotifier extends StateNotifier<PostureState> {
     _bleService.sendThreshold(val.toInt());
   }
 
-
-
   void _handleData(String data) {
     // Expected format: "10.5,15.2" -> angle, deviation
-    debugPrint("Received BLE Data: $data"); 
+    debugPrint("Received BLE Data: $data");
     try {
       final parts = data.trim().split(',');
       if (parts.length >= 2) {
         final angle = double.tryParse(parts[0]) ?? 0.0;
         final deviation = double.tryParse(parts[1]) ?? 0.0;
-        
+
         bool currentlySlouching = deviation > _threshold;
         int newSlouchCount = state.slouchCount;
-        
+
         if (currentlySlouching && !state.isSlouching) {
           newSlouchCount++;
           _alertService.triggerAlert();
@@ -178,7 +178,9 @@ class PostureNotifier extends StateNotifier<PostureState> {
     _sessionTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       state = state.copyWith(
         sessionSeconds: state.sessionSeconds + 1,
-        goodSeconds: state.isSlouching ? state.goodSeconds : state.goodSeconds + 1,
+        goodSeconds: state.isSlouching
+            ? state.goodSeconds
+            : state.goodSeconds + 1,
         badSeconds: state.isSlouching ? state.badSeconds + 1 : state.badSeconds,
       );
     });
@@ -192,18 +194,20 @@ class PostureNotifier extends StateNotifier<PostureState> {
     final history = _historyService.getAllSessions();
     if (history.isNotEmpty) {
       final last5 = history.take(5).toList();
-      final avg = last5.map((e) => e.score).reduce((a, b) => a + b) / last5.length;
+      final avg =
+          last5.map((e) => e.score).reduce((a, b) => a + b) / last5.length;
       state = state.copyWith(comparisonScore: avg.round());
     }
   }
 
   Future<void> stopSessionAndSave() async {
     if (_sessionTimer == null) return;
-    
+
     final finalState = state;
     _stopTimer();
 
-    if (finalState.sessionSeconds > 10) { // Save if session > 10s
+    if (finalState.sessionSeconds > 10) {
+      // Save if session > 10s
       final session = SessionModel(
         date: DateTime.now().toString().split('.')[0], // Simple date format
         duration: _formatDuration(finalState.sessionSeconds),
@@ -256,14 +260,16 @@ final alertServiceProvider = Provider((ref) {
   return AlertService(settingsService);
 });
 
-final postureProvider = StateNotifierProvider<PostureNotifier, PostureState>((ref) {
+final postureProvider = StateNotifierProvider<PostureNotifier, PostureState>((
+  ref,
+) {
   final historyService = ref.watch(historyServiceProvider);
   final alertService = ref.watch(alertServiceProvider);
   final settingsService = ref.watch(settingsServiceProvider);
   return PostureNotifier(
-    ref.watch(bleServiceProvider), 
-    historyService, 
-    alertService, 
+    ref.watch(bleServiceProvider),
+    historyService,
+    alertService,
     settingsService,
   );
 });
