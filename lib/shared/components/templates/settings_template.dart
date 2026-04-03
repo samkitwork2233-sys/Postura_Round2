@@ -1,43 +1,47 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_constants.dart';
 import '../ui/glass_card.dart';
-import '../ui/animated_button.dart';
+
 
 class SettingsTemplate extends StatelessWidget {
   final double threshold;
   final ValueChanged<double> onThresholdChanged;
-  final VoidCallback onCalibrate;
   final double vibrationDuration;
   final ValueChanged<double> onVibrationChanged;
   final bool soundEnabled;
   final ValueChanged<bool> onSoundToggled;
+  final DateTime? selectedDate;
+  final VoidCallback onSelectDate;
+  final VoidCallback onClearDate;
   final String labelThreshold;
   final String labelSensitivity;
   final String descThreshold;
-  final String labelCalibration;
-  final String descCalibration;
-  final String labelCalibrateBtn;
   final String labelAlertFeedback;
   final String labelSoundAlerts;
   final String labelVibrationMs;
+  final String labelDateFilter;
+  final String labelSelectDate;
+  final String labelClearFilter;
 
   const SettingsTemplate({
     required this.threshold,
     required this.onThresholdChanged,
-    required this.onCalibrate,
     required this.vibrationDuration,
     required this.onVibrationChanged,
     required this.soundEnabled,
     required this.onSoundToggled,
+    required this.selectedDate,
+    required this.onSelectDate,
+    required this.onClearDate,
     required this.labelThreshold,
     required this.labelSensitivity,
     required this.descThreshold,
-    required this.labelCalibration,
-    required this.descCalibration,
-    required this.labelCalibrateBtn,
     required this.labelAlertFeedback,
     required this.labelSoundAlerts,
     required this.labelVibrationMs,
+    required this.labelDateFilter,
+    required this.labelSelectDate,
+    required this.labelClearFilter,
     super.key,
   });
 
@@ -86,23 +90,50 @@ class SettingsTemplate extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppConstants.spaceLG),
-          // Calibration
-          Text(labelCalibration, style: theme.textTheme.titleMedium),
+
+          const SizedBox(height: AppConstants.spaceLG),
+          // Date Filter Section
+          Text(labelDateFilter, style: theme.textTheme.titleMedium),
           const SizedBox(height: AppConstants.spaceSM),
           GlassCard(
-            width: double.infinity,
-            child: Column(
+            child: Row(
               children: [
-                Text(descCalibration),
-                const SizedBox(height: AppConstants.spaceMD),
-                AnimatedButton(
-                  onPressed: onCalibrate,
-                  child: Text(labelCalibrateBtn),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedDate == null 
+                            ? labelClearFilter 
+                            : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                        style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      if (selectedDate != null)
+                        Text(
+                          labelDateFilter,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                    ],
+                  ),
+                ),
+                if (selectedDate != null)
+                  IconButton(
+                    icon: const Icon(Icons.clear, size: 20),
+                    onPressed: onClearDate,
+                  ),
+                ElevatedButton.icon(
+                  onPressed: onSelectDate,
+                  icon: const Icon(Icons.calendar_today, size: 16),
+                  label: Text(labelSelectDate),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: AppConstants.spaceLG),
+
           // Alerts Section
           Text(labelAlertFeedback, style: theme.textTheme.titleMedium),
           const SizedBox(height: AppConstants.spaceSM),

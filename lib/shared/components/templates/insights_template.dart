@@ -8,9 +8,11 @@ class InsightsTemplate extends StatelessWidget {
   final String postureScore;
   final String comparisonText;
   final bool isBetter;
+  final VoidCallback onComparePressed;
   final String labelTrend;
   final String labelSlouches;
   final String labelScore;
+  final String labelCompare;
 
   const InsightsTemplate({
     required this.graphWidget,
@@ -18,9 +20,11 @@ class InsightsTemplate extends StatelessWidget {
     required this.postureScore,
     required this.comparisonText,
     required this.isBetter,
+    required this.onComparePressed,
     required this.labelTrend,
     required this.labelSlouches,
     required this.labelScore,
+    required this.labelCompare,
     super.key,
   });
 
@@ -86,6 +90,19 @@ class InsightsTemplate extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: AppConstants.spaceMD),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onComparePressed,
+              icon: const Icon(Icons.compare_arrows_rounded),
+              label: Text(labelCompare),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                side: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.5)),
+              ),
             ),
           ),
           const SizedBox(height: AppConstants.spaceXL),

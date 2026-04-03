@@ -108,7 +108,8 @@ class BleService {
   Future<void> sendThreshold(int threshold) async {
     if (_characteristic != null) {
       try {
-        await _characteristic!.write(threshold.toString().codeUnits);
+        final msg = "THRESHOLD:$threshold";
+        await _characteristic!.write(msg.codeUnits);
       } catch (e) {
         debugPrint("Error sending threshold: $e");
       }

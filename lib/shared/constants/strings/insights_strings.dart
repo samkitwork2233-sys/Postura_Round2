@@ -10,4 +10,13 @@ class InsightsStrings {
   static const String realTimeTrend = "Real-time Trend";
   static const String slouches = "Slouches";
   static const String score = "Score";
+  static const String compareYesterday = "Compare with Yesterday";
+  static const String todaySummary = "Today's Summary";
+  static const String yesterdaySummary = "Yesterday's Summary";
+  static const String totalSessions = "Total Sessions";
+  static const String avgScore = "Avg Score";
+  static const String totalDuration = "Total Duration";
+  static const String trend = "Trend";
+  static const String noDataSummary = "No data for this date";
+  static const String close = "Close";
 }

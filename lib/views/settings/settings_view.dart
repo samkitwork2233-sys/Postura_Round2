@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:postura/modules/storage/core/settings_provider.dart';
-import '../../modules/posture/core/posture_provider.dart';
+import 'package:postura/modules/storage/core/history_provider.dart';
+import 'package:postura/modules/posture/core/posture_provider.dart';
 import 'package:postura/shared/components/templates/settings_template.dart';
 import 'package:postura/shared/components/templates/common_page_shell.dart';
 import 'package:postura/shared/components/ui/theme_toggle.dart';
@@ -15,6 +16,8 @@ class SettingsView extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final settingsNotifier = ref.read(settingsProvider.notifier);
     final postureNotifier = ref.read(postureProvider.notifier);
+    final selectedDate = ref.watch(historyDateFilterProvider);
+    final dateFilterNotifier = ref.read(historyDateFilterProvider.notifier);
 
     return CommonPageShell(
       title: SettingsStrings.settings,
@@ -28,21 +31,6 @@ class SettingsView extends ConsumerWidget {
           settingsNotifier.setThreshold(val);
           postureNotifier.setThreshold(val);
         },
-        onCalibrate: () {
-          final success = postureNotifier.calibrateBaseline();
-          if (success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text(SettingsStrings.baselineCalibrated)),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(SettingsStrings.connectToCalibrate),
-                backgroundColor: Colors.redAccent,
-              ),
-            );
-          }
-        },
         vibrationDuration: settings.vibrationDuration,
         onVibrationChanged: (val) {
           settingsNotifier.setVibrationDuration(val);
@@ -51,15 +39,28 @@ class SettingsView extends ConsumerWidget {
         onSoundToggled: (val) {
           settingsNotifier.setSoundEnabled(val);
         },
+        selectedDate: selectedDate,
+        onSelectDate: () async {
+          final picked = await showDatePicker(
+            context: context,
+            initialDate: selectedDate ?? DateTime.now(),
+            firstDate: DateTime(2024),
+            lastDate: DateTime.now(),
+          );
+          if (picked != null) {
+            dateFilterNotifier.state = picked;
+          }
+        },
+        onClearDate: () => dateFilterNotifier.state = null,
         labelThreshold: SettingsStrings.threshold,
         labelSensitivity: SettingsStrings.sensitivity,
         descThreshold: SettingsStrings.thresholdDescription,
-        labelCalibration: SettingsStrings.calibration,
-        descCalibration: SettingsStrings.calibrationDescription,
-        labelCalibrateBtn: SettingsStrings.calibrateNow,
         labelAlertFeedback: SettingsStrings.alertFeedback,
         labelSoundAlerts: SettingsStrings.sound,
         labelVibrationMs: SettingsStrings.vibrationMs,
+        labelDateFilter: SettingsStrings.dateFilter,
+        labelSelectDate: SettingsStrings.selectDate,
+        labelClearFilter: SettingsStrings.clearFilter,
       ),
     );
   }

@@ -41,7 +41,89 @@ class HistoryNotifier extends StateNotifier<List<SessionModel>> {
   }
 }
 
+class SessionStats {
+  final int totalSessions;
+  final int averageScore;
+  final Duration totalDuration;
+  final int totalSlouches;
+
+  SessionStats({
+    required this.totalSessions,
+    required this.averageScore,
+    required this.totalDuration,
+    required this.totalSlouches,
+  });
+
+  factory SessionStats.empty() => SessionStats(
+    totalSessions: 0,
+    averageScore: 0,
+    totalDuration: Duration.zero,
+    totalSlouches: 0,
+  );
+}
+
 final historyServiceProvider = Provider((ref) => HistoryService());
 final historyProvider = StateNotifierProvider<HistoryNotifier, List<SessionModel>>((ref) {
   return HistoryNotifier(ref.watch(historyServiceProvider));
 });
+
+final historyDateFilterProvider = StateProvider<DateTime?>((ref) => null);
+
+final filteredHistoryProvider = Provider<List<SessionModel>>((ref) {
+  final history = ref.watch(historyProvider);
+  final filterDate = ref.watch(historyDateFilterProvider);
+  
+  if (filterDate == null) return history;
+  
+  return history.where((s) => 
+    s.timestamp.year == filterDate.year &&
+    s.timestamp.month == filterDate.month &&
+    s.timestamp.day == filterDate.day
+  ).toList();
+});
+
+final sessionStatsProvider = Provider.family<SessionStats, DateTime>((ref, date) {
+  final history = ref.watch(historyProvider);
+  
+  final daySessions = history.where((s) => 
+    s.timestamp.year == date.year &&
+    s.timestamp.month == date.month &&
+    s.timestamp.day == date.day
+  ).toList();
+
+  if (daySessions.isEmpty) return SessionStats.empty();
+
+  int totalScore = 0;
+  int totalSlouches = 0;
+  int totalSeconds = 0;
+
+  for (var s in daySessions) {
+    totalScore += s.score;
+    totalSlouches += s.slouches;
+    totalSeconds += _parseDuration(s.duration);
+  }
+
+  return SessionStats(
+    totalSessions: daySessions.length,
+    averageScore: (totalScore / daySessions.length).round(),
+    totalDuration: Duration(seconds: totalSeconds),
+    totalSlouches: totalSlouches,
+  );
+});
+
+int _parseDuration(String duration) {
+  try {
+    final parts = duration.split(' ');
+    int total = 0;
+    for (var part in parts) {
+      if (part.endsWith('m')) {
+        total += int.parse(part.replaceAll('m', '')) * 60;
+      } else if (part.endsWith('s')) {
+        total += int.parse(part.replaceAll('s', ''));
+      }
+    }
+    return total;
+  } catch (_) {
+    return 0;
+  }
+}

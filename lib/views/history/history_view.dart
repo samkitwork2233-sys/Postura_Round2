@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../modules/storage/core/history_provider.dart';
+import 'package:postura/modules/storage/core/history_provider.dart';
 import 'package:postura/shared/components/templates/history_template.dart';
 import 'package:postura/shared/components/templates/common_page_shell.dart';
 import 'package:postura/shared/components/ui/theme_toggle.dart';
@@ -13,7 +13,7 @@ class HistoryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final history = ref.watch(historyProvider);
+    final history = ref.watch(filteredHistoryProvider);
     final settings = ref.watch(settingsProvider);
 
     return CommonPageShell(
@@ -24,8 +24,12 @@ class HistoryView extends ConsumerWidget {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.delete_outline_rounded, color: AppColors.destructive),
-          onPressed: () => _showCleanupDialog(context, ref.read(historyProvider.notifier)),
+          icon: const Icon(
+            Icons.delete_outline_rounded,
+            color: AppColors.destructive,
+          ),
+          onPressed: () =>
+              _showCleanupDialog(context, ref.read(historyProvider.notifier)),
         ),
       ],
       child: HistoryTemplate(
@@ -103,7 +107,10 @@ class HistoryView extends ConsumerWidget {
               }
               Navigator.pop(context);
             },
-            child: const Text(HistoryStrings.clear, style: TextStyle(color: AppColors.destructive)),
+            child: const Text(
+              HistoryStrings.clear,
+              style: TextStyle(color: AppColors.destructive),
+            ),
           ),
         ],
       ),

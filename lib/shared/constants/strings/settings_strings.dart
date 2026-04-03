@@ -15,4 +15,7 @@ class SettingsStrings {
   static const String baselineCalibrated = "Baseline Calibrated";
   static const String alertFeedback = "Alert Feedback";
   static const String connectToCalibrate = "Connect device to calibrate";
+  static const String dateFilter = "Date Filter";
+  static const String selectDate = "Select Date";
+  static const String clearFilter = "All Time";
 }

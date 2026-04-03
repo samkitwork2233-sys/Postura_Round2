@@ -22,7 +22,6 @@ class PostureState {
   final bool isConnected;
   final List<double> deviationHistory;
   final int? comparisonScore;
-  final double? baselineAngle;
   final ConnectionStatus connectionStatus;
   final String? deviceName;
   final String? deviceAddress;
@@ -39,7 +38,6 @@ class PostureState {
     this.connectionStatus = ConnectionStatus.idle,
     this.deviationHistory = const [],
     this.comparisonScore,
-    this.baselineAngle,
     this.deviceName,
     this.deviceAddress,
   });
@@ -56,7 +54,6 @@ class PostureState {
     ConnectionStatus? connectionStatus,
     List<double>? deviationHistory,
     int? comparisonScore,
-    double? baselineAngle,
     String? deviceName,
     String? deviceAddress,
   }) {
@@ -72,7 +69,6 @@ class PostureState {
       connectionStatus: connectionStatus ?? this.connectionStatus,
       deviationHistory: deviationHistory ?? this.deviationHistory,
       comparisonScore: comparisonScore ?? this.comparisonScore,
-      baselineAngle: baselineAngle ?? this.baselineAngle,
       deviceName: deviceName ?? this.deviceName,
       deviceAddress: deviceAddress ?? this.deviceAddress,
     );
@@ -96,10 +92,12 @@ class PostureNotifier extends StateNotifier<PostureState> {
   final BleService _bleService;
   final HistoryService _historyService;
   final AlertService _alertService;
+  final SettingsService _settingsService;
   Timer? _sessionTimer;
   double _threshold = 15.0;
 
-  PostureNotifier(this._bleService, this._historyService, this._alertService) : super(PostureState()) {
+  PostureNotifier(this._bleService, this._historyService, this._alertService, this._settingsService) : super(PostureState()) {
+    _threshold = _settingsService.threshold;
     _init();
   }
 
@@ -122,6 +120,7 @@ class PostureNotifier extends StateNotifier<PostureState> {
         deviceAddress: isConnected ? _bleService.connectedDeviceAddress : null,
       );
       if (isConnected) {
+        _bleService.sendThreshold(_threshold.toInt());
         _startTimer();
       } else {
         _stopTimer();
@@ -134,11 +133,7 @@ class PostureNotifier extends StateNotifier<PostureState> {
     _bleService.sendThreshold(val.toInt());
   }
 
-  bool calibrateBaseline() {
-    if (!state.isConnected) return false;
-    state = state.copyWith(baselineAngle: state.angle);
-    return true;
-  }
+
 
   void _handleData(String data) {
     // Expected format: "10.5,15.2" -> angle, deviation
@@ -147,12 +142,9 @@ class PostureNotifier extends StateNotifier<PostureState> {
       final parts = data.trim().split(',');
       if (parts.length >= 2) {
         final angle = double.tryParse(parts[0]) ?? 0.0;
+        final deviation = double.tryParse(parts[1]) ?? 0.0;
         
-        // Calculate deviation relative to baseline
-        final double baseline = state.baselineAngle ?? 0.0;
-        final double calculatedDeviation = (angle - baseline).abs();
-        
-        bool currentlySlouching = calculatedDeviation > _threshold;
+        bool currentlySlouching = deviation > _threshold;
         int newSlouchCount = state.slouchCount;
         
         if (currentlySlouching && !state.isSlouching) {
@@ -162,11 +154,11 @@ class PostureNotifier extends StateNotifier<PostureState> {
 
         final newHistory = List<double>.from(state.deviationHistory);
         if (newHistory.length >= 40) newHistory.removeAt(0);
-        newHistory.add(calculatedDeviation);
+        newHistory.add(deviation);
 
         state = state.copyWith(
           angle: angle,
-          deviation: calculatedDeviation,
+          deviation: deviation,
           slouchCount: newSlouchCount,
           isSlouching: currentlySlouching,
           deviationHistory: newHistory,
@@ -263,5 +255,11 @@ final alertServiceProvider = Provider((ref) {
 final postureProvider = StateNotifierProvider<PostureNotifier, PostureState>((ref) {
   final historyService = ref.watch(historyServiceProvider);
   final alertService = ref.watch(alertServiceProvider);
-  return PostureNotifier(ref.watch(bleServiceProvider), historyService, alertService);
+  final settingsService = ref.watch(settingsServiceProvider);
+  return PostureNotifier(
+    ref.watch(bleServiceProvider), 
+    historyService, 
+    alertService, 
+    settingsService,
+  );
 });
