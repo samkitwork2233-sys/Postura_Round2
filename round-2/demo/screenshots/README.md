@@ -1,4 +1,4 @@
-# Postura — Round 2 Demo Screenshots
+# <img src="/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" width="40" height="40" style="border-radius: 50%; vertical-align: middle;" /> Postura — Round 2 Demo Screenshots
 
 This folder contains the visual evidence for the Postura implementation of **FAR AWAY 2026 — Round 2, Challenge #728: Operational Readiness: Conflict Check**.
 

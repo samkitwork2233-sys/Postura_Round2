@@ -1,4 +1,4 @@
-# Postura
+# <img src="/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" width="40" height="40" style="border-radius: 50%; vertical-align: middle;" /> Postura
 
 ## Wearable Posture Monitoring + Operational Readiness Conflict Check
 
