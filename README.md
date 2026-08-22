@@ -225,7 +225,7 @@ The hardware design and visual evidence are documented separately.
 
 See:
 
-Hardware Documentation
+[Hardware Documentation](hardware/README.md)
 
 Software
 
@@ -323,11 +323,11 @@ The Round 2 demonstration follows this sequence:
 
 The complete demonstration evidence is available under:
 
-round-2/demo/
+[round-2/demo/](round-2/demo/demo-link.md)
 
 The screenshot evidence is available under:
 
-round-2/demo/screenshots/
+[round-2/demo/screenshots/](round-2/demo/screenshots/README.md)
 Hardware Evidence
 
 The repository contains:
@@ -344,13 +344,13 @@ Round 2 Documentation
 
 The main Round 2 documentation is available at:
 
-round-2/challenge-solution.md
+[round-2/challenge-solution.md](round-2/challenge-solution.md)
 
 Additional documentation is available under:
 
-round-2/docs/
-Judging Parameters
-Task Implementation
+[round-2/docs/](round-2/docs/)
+[Judging Parameters](round-2/challenge-solution.md#18-alignment-with-judging-parameters)
+[Task Implementation](round-2/challenge-solution.md#task-implementation)
 
 Postura addresses the Round 2 requirement through a readiness and conflict-detection workflow using live posture information before an activity begins.
 
@@ -379,16 +379,16 @@ Documentation & Presentation
 
 The repository includes:
 
-Flutter application source code
-Hardware source files
-KiCad schematic
-KiCad PCB design
-Hardware visual evidence
-Round 2 challenge documentation
-System architecture documentation
-Research documentation
-Demo documentation
-Screenshot evidence
+*   [Flutter application source code](lib/)
+*   [Hardware source files](hardware/)
+*   [KiCad schematic](hardware/schematic/)
+*   [KiCad PCB design](hardware/pcb/)
+*   [Hardware visual evidence](hardware/images/)
+*   [Round 2 challenge documentation](round-2/challenge-solution.md)
+*   [System architecture documentation](round-2/docs/system-architecture.md)
+*   [Research documentation](round-2/docs/docs/research.md)
+*   [Demo documentation](round-2/demo/demo-link.md)
+*   [Screenshot evidence](round-2/demo/screenshots/README.md)
 Prototype Limitations
 
 The current implementation is a prototype demonstration.
