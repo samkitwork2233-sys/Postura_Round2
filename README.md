@@ -1,4 +1,9 @@
-# Postura - Smart Posture Monitoring & Correction
+<p align="center">
+  <img src="android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" width="120" height="120" alt="Postura Logo" />
+</p>
+
+<h1 align="center">Postura</h1>
+<p align="center">Smart Posture Monitoring & Correction</p>
 
 Postura is a state-of-the-art mobile application designed to improve spinal health. It connects to external accelerometer hardware via Bluetooth Low Energy (BLE) to deliver real-time posture deviation alerts, session logging, spinal alignment history, and historical insights.
 
@@ -21,15 +26,11 @@ Today's features extend the MVP to focus on **action readiness, pre-flight postu
 *   **Interactive Customization**: Added an interactive **Range Slider (0° to 90°)** inside the Settings panel, enabling users to calibrate their custom target posture boundaries based on personal comfort.
 *   **Home View Mapping**: These min/max angles map dynamically to the Home screen, showing live validation markers: `(Target: Min° - Max°)`.
 
-### 3. Automatic Device Thresholding
-*   **Immediate Calibration**: As soon as the BLE hardware connects, the app automatically configures the posture alert threshold adjustment to **`10.0°`**.
-*   **State Persistence**: The threshold is updated in local persistent storage and transmitted to the hardware device immediately via a characteristic write.
-
-### 4. BLE Hardware Synchronization
+### 3. BLE Hardware Synchronization
 *   **Dual-Layer Calibration**: Added a hardware sync protocol. The app transmits the calibrated upright angle (`BASE:<angle>`) to the physical posture sensor over Bluetooth.
 *   **Firmware Support**: If the hardware firmware supports `BASE:` parser protocols, the physical sensor calibrates its base accelerometer axis; otherwise, the mobile app calculates deviations locally to keep alerts unified.
 
-### 5. UI Overhaul & Glassmorphism Styling
+### 4. UI Overhaul & Glassmorphism Styling
 *   **Glow & Radial Background**: Designed radial highlights (luminous teal fading to deep slate `#0D171C`) that act as a dynamic background across all screens.
 *   **Gradient Buttons**: Re-styled all primary and destructive buttons with glowing linear gradients (Teal and Rose) and micro-scale animations.
 *   **translucent settings Badges**: Replaced clunky text fields with rounded glass badges for Sensitivity and Vibration metrics.
