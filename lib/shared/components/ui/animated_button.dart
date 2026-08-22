@@ -50,6 +50,83 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final bool isSecondary = widget.color != null && 
+        (widget.color == Colors.grey || 
+         widget.color!.a < 1.0 || 
+         widget.color == Colors.white10 || 
+         widget.color == Colors.black12);
+        
+    final bool isDanger = widget.color != null && 
+        (widget.color == Colors.redAccent || 
+         widget.color == Colors.red);
+
+    BoxDecoration decoration;
+    TextStyle textStyle;
+
+    if (isSecondary) {
+      decoration = BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+        ),
+      );
+      textStyle = TextStyle(
+        color: isDark ? Colors.redAccent.shade100 : Colors.red.shade700,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      );
+    } else if (isDanger) {
+      decoration = BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFF43F5E), // rose-500
+            Color(0xFFE11D48), // rose-600
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFF43F5E).withValues(alpha: 0.35),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      );
+      textStyle = const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      );
+    } else {
+      decoration = BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF0D9488), // teal-600
+            Color(0xFF14B8A6), // teal-500
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF14B8A6).withValues(alpha: 0.4),
+            blurRadius: 24,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      );
+      textStyle = const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      );
+    }
 
     return GestureDetector(
       onTapDown: _onTapDown,
@@ -60,24 +137,11 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
         scale: _scaleAnimation,
         child: Container(
           width: widget.width,
-          height: widget.height ?? 50,
+          height: widget.height ?? 52,
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: widget.color ?? theme.colorScheme.primary,
-            borderRadius: BorderRadius.circular(AppConstants.radius),
-            boxShadow: [
-              BoxShadow(
-                color: (widget.color ?? theme.colorScheme.primary).withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
+          decoration: decoration,
           child: DefaultTextStyle(
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: theme.colorScheme.onPrimary,
-              fontWeight: FontWeight.bold,
-            ) ?? const TextStyle(),
+            style: textStyle,
             child: widget.child,
           ),
         ),

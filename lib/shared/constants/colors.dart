@@ -7,18 +7,18 @@ class AppColors {
   // --- BASE COLORS ---
 
   // Light Theme (Warm)
-  static const backgroundLight = Color(0xFFFAFAF9);
-  static const foregroundLight = Color(0xFF09090B);
+  static const backgroundLight = Color(0xFFF4FBF9);
+  static const foregroundLight = Color(0xFF090D10);
   
-  // Dark Theme (Black)
-  static const backgroundDark = Color(0xFF09090B);
+  // Dark Theme (Deep Slate)
+  static const backgroundDark = Color(0xFF0D171C);
   static const foregroundDark = Color(0xFFFAFAF9);
 
   // --- FEATURE COLORS (Safe/Alert) ---
 
-  // Safe (Mint Green)
-  static const safeLight = Color(0xFF059669); // Slightly darker for legibility on light
-  static const safeDark = Color(0xFF10B981);  // Brighter for dark mode
+  // Safe (Luminous Teal)
+  static const safeLight = Color(0xFF0D9488); 
+  static const safeDark = Color(0xFF2DD4BF);  
 
   // Alert (Amber)
   static const alertLight = Color(0xFFD97706); // Darker amber for contrast on light

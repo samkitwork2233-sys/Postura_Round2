@@ -49,6 +49,26 @@ class PostureIndicatorWidget extends StatelessWidget {
             strokeCap: StrokeCap.round,
           ),
         ),
+        // Inner Glass Circle
+        Container(
+          width: 144,
+          height: 144,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white.withValues(alpha: 0.05),
+                Colors.white.withValues(alpha: 0.01),
+              ],
+            ),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.12),
+              width: 1,
+            ),
+          ),
+        ),
         // Center Content
         Column(
           mainAxisSize: MainAxisSize.min,

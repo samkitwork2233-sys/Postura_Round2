@@ -327,11 +327,25 @@ class HomeTemplate extends StatelessWidget {
                         ? AnimatedButton(
                             onPressed: onStopSessionPressed,
                             color: Colors.redAccent.withValues(alpha: 0.8),
-                            child: const Text("End & Save Session"),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.stop, size: 16, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text("End & Save Session"),
+                              ],
+                            ),
                           )
                         : AnimatedButton(
                             onPressed: onStartSessionPressed,
-                            child: const Text("Start Session"),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.play_arrow, size: 16, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text("Start Session"),
+                              ],
+                            ),
                           ),
                   ),
                   const SizedBox(width: AppConstants.spaceMD),
@@ -339,10 +353,7 @@ class HomeTemplate extends StatelessWidget {
                     child: AnimatedButton(
                       onPressed: onDisconnectPressed,
                       color: Colors.grey.withValues(alpha: 0.2),
-                      child: const Text(
-                        "Disconnect",
-                        style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
-                      ),
+                      child: const Text("Disconnect"),
                     ),
                   ),
                 ],
@@ -350,7 +361,14 @@ class HomeTemplate extends StatelessWidget {
             ] else ...[
               AnimatedButton(
                 onPressed: onConnectPressed,
-                child: const Text("Connect to Device"),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.bluetooth, size: 16, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text("Connect to Device"),
+                  ],
+                ),
               ),
             ],
             const SizedBox(height: AppConstants.spaceXL),

@@ -57,6 +57,7 @@ class SettingsTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return SingleChildScrollView(
       child: Column(
@@ -68,22 +69,30 @@ class SettingsTemplate extends StatelessWidget {
           const SizedBox(height: AppConstants.spaceSM),
           GlassCard(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(labelSensitivity)),
-                    SizedBox(
-                      width: 60,
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
-                        controller: TextEditingController(text: threshold.toInt().toString()),
-                        onSubmitted: (val) => onThresholdChanged(double.tryParse(val) ?? threshold),
+                    Text(labelSensitivity, style: const TextStyle(fontWeight: FontWeight.w600)),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "${threshold.toInt()}°",
+                        style: TextStyle(
+                          color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "monospace",
+                        ),
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: AppConstants.spaceSM),
                 Slider(
                   value: threshold.clamp(5.0, 30.0),
                   min: 5,
@@ -148,37 +157,42 @@ class SettingsTemplate extends StatelessWidget {
           const SizedBox(height: AppConstants.spaceSM),
           GlassCard(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        selectedDate == null 
-                            ? labelClearFilter 
-                            : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
-                        style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      if (selectedDate != null)
-                        Text(
-                          labelDateFilter,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                    ],
-                  ),
+                Text(
+                  selectedDate == null 
+                      ? labelClearFilter 
+                      : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                  style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                if (selectedDate != null)
-                  IconButton(
-                    icon: const Icon(Icons.clear, size: 20),
-                    onPressed: onClearDate,
-                  ),
-                ElevatedButton.icon(
-                  onPressed: onSelectDate,
-                  icon: const Icon(Icons.calendar_today, size: 16),
-                  label: Text(labelSelectDate),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (selectedDate != null) ...[
+                      IconButton(
+                        icon: const Icon(Icons.clear, size: 20, color: Colors.redAccent),
+                        onPressed: onClearDate,
+                      ),
+                      const SizedBox(width: 8),
+                    ],
+                    OutlinedButton.icon(
+                      onPressed: onSelectDate,
+                      icon: Icon(Icons.calendar_today, size: 14, color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488)),
+                      label: Text(
+                        labelSelectDate,
+                        style: TextStyle(
+                          color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: isDark ? const Color(0x4C2DD4BF) : const Color(0x4C0D9488)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -190,33 +204,50 @@ class SettingsTemplate extends StatelessWidget {
           const SizedBox(height: AppConstants.spaceSM),
           GlassCard(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SwitchListTile(
-                  title: Text(labelSoundAlerts),
+                  contentPadding: EdgeInsets.zero,
+                  title: Row(
+                    children: [
+                      Icon(Icons.volume_up, size: 18, color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488)),
+                      const SizedBox(width: 8),
+                      Text(labelSoundAlerts, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    ],
+                  ),
                   value: soundEnabled,
                   onChanged: onSoundToggled,
                   activeThumbColor: theme.colorScheme.primary,
                 ),
-                const Divider(),
+                const Divider(height: 24),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text(labelVibrationMs)),
-                    SizedBox(
-                      width: 70,
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                          border: OutlineInputBorder(),
+                    Row(
+                      children: [
+                        Icon(Icons.vibration, size: 18, color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488)),
+                        const SizedBox(width: 8),
+                        Text(labelVibrationMs, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "${vibrationDuration.toInt()} ms",
+                        style: TextStyle(
+                          color: isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "monospace",
                         ),
-                        controller: TextEditingController(text: vibrationDuration.toInt().toString()),
-                        onSubmitted: (val) => onVibrationChanged(double.tryParse(val) ?? vibrationDuration),
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: AppConstants.spaceSM),
                 Slider(
                   value: vibrationDuration.clamp(100.0, 2000.0),
                   min: 100,
