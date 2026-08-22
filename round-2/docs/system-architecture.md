@@ -202,3 +202,8 @@ The architecture is designed around a simple principle:
 The wearable provides the physical measurement, while the application provides the contextual decision and user interaction.
 
 This allows Postura to move beyond passive posture monitoring toward a preventive readiness workflow.
+## System Flow Diagram
+
+The following diagram represents the overall Postura sensing, processing, feedback, and application workflow.
+
+![Postura System Flow](system-flow-diagram.png)
