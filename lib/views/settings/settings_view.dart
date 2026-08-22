@@ -35,6 +35,14 @@ class SettingsView extends ConsumerWidget {
         onVibrationChanged: (val) {
           settingsNotifier.setVibrationDuration(val);
         },
+        minAngle: settings.minAngle,
+        maxAngle: settings.maxAngle,
+        onMinAngleChanged: (val) {
+          settingsNotifier.setMinAngle(val);
+        },
+        onMaxAngleChanged: (val) {
+          settingsNotifier.setMaxAngle(val);
+        },
         soundEnabled: settings.soundEnabled,
         onSoundToggled: (val) {
           settingsNotifier.setSoundEnabled(val);

@@ -7,12 +7,16 @@ class SettingsState {
   final double vibrationDuration;
   final bool soundEnabled;
   final ThemeMode themeMode;
+  final double minAngle;
+  final double maxAngle;
 
   SettingsState({
     required this.threshold,
     required this.vibrationDuration,
     required this.soundEnabled,
     required this.themeMode,
+    required this.minAngle,
+    required this.maxAngle,
   });
 
   SettingsState copyWith({
@@ -20,12 +24,16 @@ class SettingsState {
     double? vibrationDuration,
     bool? soundEnabled,
     ThemeMode? themeMode,
+    double? minAngle,
+    double? maxAngle,
   }) {
     return SettingsState(
       threshold: threshold ?? this.threshold,
       vibrationDuration: vibrationDuration ?? this.vibrationDuration,
       soundEnabled: soundEnabled ?? this.soundEnabled,
       themeMode: themeMode ?? this.themeMode,
+      minAngle: minAngle ?? this.minAngle,
+      maxAngle: maxAngle ?? this.maxAngle,
     );
   }
 }
@@ -39,6 +47,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           vibrationDuration: _service.vibrationDuration,
           soundEnabled: _service.soundEnabled,
           themeMode: _parseThemeMode(_service.themeMode),
+          minAngle: _service.minAngle,
+          maxAngle: _service.maxAngle,
         ));
 
   static ThemeMode _parseThemeMode(String value) {
@@ -81,6 +91,16 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   Future<void> setThemeMode(ThemeMode mode) async {
     await _service.setThemeMode(_themeModeToString(mode));
     state = state.copyWith(themeMode: mode);
+  }
+
+  Future<void> setMinAngle(double value) async {
+    await _service.setMinAngle(value);
+    state = state.copyWith(minAngle: value);
+  }
+
+  Future<void> setMaxAngle(double value) async {
+    await _service.setMaxAngle(value);
+    state = state.copyWith(maxAngle: value);
   }
 
   void toggleTheme() {

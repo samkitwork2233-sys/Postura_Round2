@@ -27,9 +27,11 @@ class HomeView extends ConsumerWidget {
       ),
       child: HomeTemplate(
         title: HomeStrings.dashboard,
-        statusText: postureState.isSlouching
-            ? HomeStrings.badPosture
-            : HomeStrings.goodPosture,
+        statusText: postureState.isSessionActive
+            ? (postureState.isSlouching
+                ? HomeStrings.badPosture
+                : HomeStrings.goodPosture)
+            : "Ready to Start Session",
         deviation: postureState.deviation,
         threshold: settings.threshold,
         isSafe: !postureState.isSlouching,
@@ -41,9 +43,6 @@ class HomeView extends ConsumerWidget {
         isConnected: postureState.isConnected,
         deviceName: postureState.deviceName,
         deviceAddress: postureState.deviceAddress,
-        connectButtonText: postureState.isConnected
-            ? HomeStrings.endAndSave
-            : HomeStrings.connectToDevice,
         onConnectPressed: () async {
           final readyToConnect = await connectionActions.ensurePermissions(
             context,
@@ -53,6 +52,16 @@ class HomeView extends ConsumerWidget {
           }
         },
         connectionStatus: postureState.connectionStatus,
+        isSessionActive: postureState.isSessionActive,
+        isCalibrating: postureState.isCalibrating,
+        calibrationCountdown: postureState.calibrationCountdown,
+        calibrationError: postureState.calibrationError,
+        onStartSessionPressed: () => postureNotifier.startCalibration(),
+        onStopSessionPressed: () => postureNotifier.stopSessionAndSave(),
+        onCancelCalibrationPressed: () => postureNotifier.cancelCalibration(),
+        onDisconnectPressed: () => postureNotifier.toggleConnection(),
+        minAngle: settings.minAngle,
+        maxAngle: settings.maxAngle,
       ),
     );
   }

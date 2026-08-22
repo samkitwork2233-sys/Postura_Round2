@@ -116,6 +116,17 @@ class BleService {
     }
   }
 
+  Future<void> sendBaseAngle(int baseAngle) async {
+    if (_characteristic != null) {
+      try {
+        final msg = "BASE:$baseAngle";
+        await _characteristic!.write(msg.codeUnits);
+      } catch (e) {
+        debugPrint("Error sending base angle: $e");
+      }
+    }
+  }
+
   void dispose() {
     _scanSubscription?.cancel();
     _notifySubscription?.cancel();

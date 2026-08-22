@@ -39,11 +39,7 @@ class InsightsTemplate extends StatelessWidget {
           const SizedBox(height: AppConstants.spaceMD),
           Text(labelTrend, style: theme.textTheme.titleMedium),
           const SizedBox(height: AppConstants.spaceSM),
-          GlassCard(
-            height: 200,
-            width: double.infinity,
-            child: graphWidget,
-          ),
+          GlassCard(height: 200, width: double.infinity, child: graphWidget),
           const SizedBox(height: AppConstants.spaceLG),
           Row(
             children: [
@@ -52,7 +48,12 @@ class InsightsTemplate extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(labelSlouches, style: theme.textTheme.bodySmall),
-                      Text(slouchCount, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
+                      Text(
+                        slouchCount,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -63,10 +64,15 @@ class InsightsTemplate extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(labelScore, style: theme.textTheme.bodySmall),
-                      Text("$postureScore%", style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isBetter ? theme.colorScheme.primary : Colors.amber,
-                      )),
+                      Text(
+                        "$postureScore%",
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isBetter
+                              ? theme.colorScheme.primary
+                              : Colors.amber,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -84,10 +90,7 @@ class InsightsTemplate extends StatelessWidget {
                 ),
                 const SizedBox(width: AppConstants.spaceMD),
                 Expanded(
-                  child: Text(
-                    comparisonText,
-                    style: theme.textTheme.bodyLarge,
-                  ),
+                  child: Text(comparisonText, style: theme.textTheme.bodyLarge),
                 ),
               ],
             ),
@@ -101,7 +104,9 @@ class InsightsTemplate extends StatelessWidget {
               label: Text(labelCompare),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                side: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.5)),
+                side: BorderSide(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                ),
               ),
             ),
           ),

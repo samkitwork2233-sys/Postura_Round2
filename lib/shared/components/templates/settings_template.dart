@@ -23,6 +23,11 @@ class SettingsTemplate extends StatelessWidget {
   final String labelSelectDate;
   final String labelClearFilter;
 
+  final double minAngle;
+  final double maxAngle;
+  final ValueChanged<double> onMinAngleChanged;
+  final ValueChanged<double> onMaxAngleChanged;
+
   const SettingsTemplate({
     required this.threshold,
     required this.onThresholdChanged,
@@ -42,6 +47,10 @@ class SettingsTemplate extends StatelessWidget {
     required this.labelDateFilter,
     required this.labelSelectDate,
     required this.labelClearFilter,
+    required this.minAngle,
+    required this.maxAngle,
+    required this.onMinAngleChanged,
+    required this.onMaxAngleChanged,
     super.key,
   });
 
@@ -90,7 +99,49 @@ class SettingsTemplate extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppConstants.spaceLG),
-
+          // Ideal Posture Range Section
+          Text("Ideal Posture Readiness Range", style: theme.textTheme.titleMedium),
+          const SizedBox(height: AppConstants.spaceSM),
+          GlassCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Ideal Angle Range", style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      "${minAngle.toInt()}° - ${maxAngle.toInt()}°",
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppConstants.spaceMD),
+                RangeSlider(
+                  values: RangeValues(minAngle.clamp(0.0, 90.0), maxAngle.clamp(0.0, 90.0)),
+                  min: 0,
+                  max: 90,
+                  divisions: 90,
+                  labels: RangeLabels("${minAngle.toInt()}°", "${maxAngle.toInt()}°"),
+                  activeColor: theme.colorScheme.primary,
+                  onChanged: (RangeValues values) {
+                    if (values.start < values.end) {
+                      onMinAngleChanged(values.start);
+                      onMaxAngleChanged(values.end);
+                    }
+                  },
+                ),
+                const SizedBox(height: AppConstants.spaceSM),
+                const Text(
+                  "Configure the target device inclination angle (in degrees) required to pass the posture readiness check when starting a session.",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: AppConstants.spaceLG),
           // Date Filter Section
           Text(labelDateFilter, style: theme.textTheme.titleMedium),
