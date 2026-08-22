@@ -22,100 +22,97 @@ Ready
 Activity Started
 ```
 
-## Screenshot Evidence
+---
 
-### 1. BLE Connected
+## 1. BLE Connected
 
 **File:** `ble-connected.jpeg`
 
-This screenshot shows the Postura application connected to the physical Postura wearable through Bluetooth Low Energy (BLE).
+Shows the Postura application connected to the physical Postura wearable through Bluetooth Low Energy (BLE).
 
-It demonstrates that the application is receiving information from the wearable device.
+![BLE Connected](ble-connected.jpeg)
 
 ---
 
-### 2. Readiness Check
+## 2. Readiness Check
 
 **File:** `readiness-check.jpeg`
 
-This screenshot shows the user initiating the readiness check before starting an activity or session.
+Shows the user initiating the readiness check before starting an activity or session.
 
-The application evaluates the current live posture state at this point.
+![Readiness Check](readiness-check.jpeg)
 
 ---
 
-### 3. Conflict Detected
+## 3. Conflict Detected
 
 **File:** `conflict.jpeg`
 
-This screenshot shows the application detecting a conflict during the readiness check.
+Shows the application detecting and presenting a conflict during the readiness check.
 
-The conflict is presented to the user **before the activity or session begins**.
+The conflict is presented **before the activity or session begins**.
 
-This is the key interaction demonstrating the Round 2 requirement.
+![Conflict Detected](conflict.jpeg)
 
 ---
 
-### 4. Posture Corrected
+## 4. Posture Corrected
 
 **File:** `corrected.jpeg`
 
-This screenshot shows the posture after the user responds to the detected conflict and corrects their posture.
+Shows the posture after the user responds to the detected conflict and corrects their posture.
 
-The application can then evaluate the updated live posture state.
+![Posture Corrected](corrected.jpeg)
 
 ---
 
-### 5. Ready
+## 5. Ready
 
 **File:** `ready.jpeg`
 
-This screenshot shows that the readiness condition has been satisfied after the conflict has been resolved.
+Shows that the readiness condition has been satisfied after the conflict has been resolved.
 
-The user is now allowed to proceed with the activity or session.
+![Ready](ready.jpeg)
 
 ---
 
-### 6. Activity Started
+## 6. Activity Started
 
 **File:** `started.jpeg`
 
-This screenshot shows the final state after the readiness check has been successfully completed and the activity or session has started.
+Shows the final state after the readiness check has been successfully completed and the activity or session has started.
+
+![Activity Started](started.jpeg)
 
 ---
 
-## Complete User Flow
-
-The six screenshots together demonstrate the complete Round 2 interaction:
+# Complete User Flow
 
 ```text
-             User wants to start
-                    │
-                    ▼
-             Readiness Check
-                    │
-                    ▼
-             Evaluate posture
-                    │
-             ┌──────┴──────┐
-             │             │
-             ▼             ▼
-       No Conflict      Conflict
-             │             │
-             ▼             ▼
-           Ready       Show Conflict
-             │             │
-             │        Correct Posture
-             │             │
-             │             ▼
-             │       Check Again
-             │             │
-             └──────┬──────┘
-                    ▼
-             Activity Starts
+User wants to start
+        ↓
+Readiness Check
+        ↓
+Evaluate posture
+        ↓
+    Conflict?
+     /     \
+   No       Yes
+   ↓         ↓
+ Ready    Conflict
+   ↓         ↓
+   │      Correct
+   │         ↓
+   │    Check Again
+   │         ↓
+   └────→ Ready
+             ↓
+       Activity Starts
 ```
 
-## Evidence Mapping
+---
+
+# Evidence Mapping
 
 | Screenshot             | Demonstrates                             |
 | ---------------------- | ---------------------------------------- |
@@ -126,7 +123,9 @@ The six screenshots together demonstrate the complete Round 2 interaction:
 | `ready.jpeg`           | Conflict resolved and readiness achieved |
 | `started.jpeg`         | User proceeds with the activity          |
 
-## Why This Evidence Matters
+---
+
+# Why This Evidence Matters
 
 The Round 2 challenge focuses on **operational readiness and conflict checking**.
 
@@ -150,17 +149,19 @@ Readiness checked again
 User proceeds
 ```
 
-This demonstrates a complete readiness-to-action workflow.
+---
 
-## Prototype Threshold
+# Prototype Threshold
 
 The current Postura prototype uses a **15° posture-angle threshold** for the readiness check.
 
-This threshold is an application-level prototype parameter used to demonstrate the Round 2 workflow.
+This is an application-level prototype parameter used to demonstrate the Round 2 workflow.
 
 It is **not presented as a clinically validated medical threshold**.
 
-## Evidence Requirements
+---
+
+# Evidence Requirements
 
 The screenshots should:
 
@@ -172,11 +173,9 @@ The screenshots should:
 
 The screenshots should not be manually edited to represent functionality that has not actually been demonstrated.
 
-## Round 2 Requirement Mapping
+---
 
-The FAR AWAY Round 2 challenge requires a readiness capability that can detect conflicts early and present them before the user commits to an action.
-
-Postura maps this requirement as follows:
+# Round 2 Requirement Mapping
 
 ```text
 Challenge Requirement
@@ -187,7 +186,7 @@ Postura Readiness Check
         ↓
 Early conflict detection
         ↓
-Conflict screen
+Conflict presented before commitment
         ↓
 User correction
         ↓
@@ -196,7 +195,9 @@ Re-evaluation
 Action allowed
 ```
 
-## Files in This Folder
+---
+
+# Files in This Folder
 
 ```text
 screenshots/
@@ -211,22 +212,8 @@ screenshots/
 
 ## Demo Sequence
 
-For judging purposes, the screenshots should preferably be viewed in this order:
+The screenshots should preferably be viewed in this order:
 
-**1 → 2 → 3 → 4 → 5 → 6**
+**BLE Connected → Readiness Check → Conflict → Corrected → Ready → Started**
 
-```text
-BLE Connected
-      ↓
-Readiness Check
-      ↓
-Conflict
-      ↓
-Corrected
-      ↓
-Ready
-      ↓
-Started
-```
-
-Together, these screenshots provide visual evidence of the complete Postura Round 2 readiness and conflict-checking workflow.
+Together, they provide visual evidence of the complete Postura Round 2 readiness and conflict-checking workflow.
