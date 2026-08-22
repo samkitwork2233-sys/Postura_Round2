@@ -345,13 +345,9 @@ The demonstration documentation is available at:
 
 ---
 
-# Repository Structure
-
-```text
 Postura/
 │
 ├── app/
-│   └── README.md
 │
 ├── android/
 ├── ios/
@@ -370,20 +366,19 @@ Postura/
 │   └── README.md
 │
 ├── round-2/
-│   └── challenge-solution.md
-│
-├── screenshots/
-│   ├── README.md
-│   ├── 01-ble-connected.png
-│   ├── 02-readiness-check.png
-│   ├── 03-conflict-detected.png
-│   ├── 04-posture-corrected.png
-│   ├── 05-ready.png
-│   └── 06-activity-started.png
+│   ├── challenge-solution.md
+│   └── demo/
+│       └── screenshots/
+│           ├── README.md
+│           ├── ble-connected.jpeg
+│           ├── readiness-check.jpeg
+│           ├── conflict.jpeg
+│           ├── corrected.jpeg
+│           ├── ready.jpeg
+│           └── started.jpeg
 │
 ├── pubspec.yaml
 └── README.md
-```
 
 ---
 
