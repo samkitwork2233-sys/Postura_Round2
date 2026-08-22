@@ -334,5 +334,5 @@ The repository includes both the KiCad source files and visual evidence of the c
 The hardware layer provides the physical sensing foundation for the Postura Round 2 readiness and conflict-detection workflow.
 
 
-### Then commit it
+
 
