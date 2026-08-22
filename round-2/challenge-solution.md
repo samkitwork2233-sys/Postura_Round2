@@ -2,145 +2,407 @@
 
 ## 1. Problem
 
-Poor posture is a common problem during prolonged sitting, studying, working, and other activities that require sustained body positioning.
+Posture-related problems can develop when users repeatedly maintain an unsuitable posture during daily activities.
 
-People often do not recognize that their posture has gradually become incorrect until discomfort or fatigue appears. Traditional posture-monitoring approaches generally focus on detecting poor posture after it has already occurred.
+Most posture-monitoring systems focus on detecting poor posture while the user is already performing an activity.
 
-Postura aims to introduce an additional layer: **readiness and conflict detection before starting an activity or session.**
+Postura introduces an additional step:
 
-## 2. Our Approach
+**checking posture readiness before the activity begins.**
 
-Postura is a wearable posture-monitoring system consisting of:
+This creates an opportunity to identify a posture conflict before the user starts the intended activity or session.
 
-* A wearable sensing device
-* MPU6050-based posture sensing
-* ESP32-based processing and BLE communication
-* Vibration-based physical feedback
-* A companion mobile application
+---
 
-The wearable continuously provides the user's posture angle to the application through Bluetooth Low Energy (BLE).
+## 2. Our Solution
 
-## 3. Round 2 Feature — Readiness Check
+Postura is a wearable posture-monitoring system combining:
 
-For Round 2, Postura introduces an application-level **Readiness Check / Conflict Detection** layer.
+- MPU6050 IMU sensing
+- ESP32 embedded processing
+- Bluetooth Low Energy (BLE)
+- Physical vibration feedback
+- Flutter mobile application
+- Real-time posture evaluation
 
-Before starting an activity or session, the user performs a readiness check.
+For Round 2, the existing posture sensing pipeline is extended with an application-level:
 
-The application evaluates the current live posture angle received from the wearable.
+**Readiness Check / Conflict Detection layer.**
 
-### Decision Logic
+The application evaluates the user's current live posture before allowing an activity or session to begin.
+
+---
+
+## 3. Round 2 Workflow
+
+The implemented workflow is:
 
 ```text
-User wants to start activity/session
-              ↓
-       Readiness Check
-              ↓
-      Read live posture angle
-              ↓
-       Compare with threshold
-              ↓
-      ┌───────┴────────┐
-      ↓                ↓
-  Acceptable        > Threshold
-   posture              ↓
-      ↓          Conflict Detected
- Ready to Start          ↓
-                  User Corrects Posture
-                         ↓
-                  Readiness Check Again
-                         ↓
-                    Ready to Start
-```
+Wearable
+   │
+   ▼
+MPU6050 Posture Sensing
+   │
+   ▼
+ESP32 Processing
+   │
+   ▼
+BLE Transmission
+   │
+   ▼
+Postura Application
+   │
+   ▼
+Readiness Check
+   │
+   ▼
+Posture Evaluation
+   │
+   ├───────────────┐
+   │               │
+ Conflict         Ready
+ Detected           │
+   │               │
+   ▼               ▼
+Correct          Activity
+Posture           Started
+   │
+   ▼
+Re-evaluate
+   │
+   └──────────────► Ready
+4. Readiness Check
 
-## 4. Conflict Detection
+Before starting an activity or session, the application evaluates the user's current posture.
 
-The prototype uses a posture-angle threshold of **15°** for the Round 2 readiness check.
+The readiness check uses the live posture information received from the wearable.
 
-If the detected posture angle exceeds the threshold:
+For the Round 2 prototype demonstration, a 15° readiness threshold is used.
 
-**Conflict Detected**
+The decision can be represented as:
 
-is shown to the user instead of immediately allowing the activity/session to begin.
+Posture deviation ≤ 15°
+        │
+        ▼
+      READY
+Posture deviation > 15°
+        │
+        ▼
+CONFLICT DETECTED
 
-The purpose is not to diagnose a medical condition. It is a preventive interaction layer designed to encourage the user to correct their posture before beginning prolonged activity.
+The threshold is a prototype parameter used for the Round 2 demonstration.
 
-## 5. Why This Matters
+5. Conflict Detection
 
-Most posture systems focus primarily on detecting and responding to bad posture while the user is already engaged in an activity.
+When the user's current posture does not satisfy the readiness condition, Postura displays a Conflict Detected state.
 
-Postura extends this concept by asking:
+The conflict is presented before the activity begins.
 
-> "Is the user's posture suitable to begin the activity in the first place?"
+This gives the user an opportunity to correct their posture before proceeding.
 
-This creates a simple intervention point before prolonged sitting, studying, working, or other posture-sensitive activities.
+The system therefore follows:
 
-## 6. Hardware–Software Integration
+Detect → Inform → Correct → Re-evaluate
 
-The system is divided into two major layers.
+6. Posture Correction
 
-### Wearable Layer
+After a conflict is detected, the user corrects their posture.
 
-The wearable contains:
+The application then evaluates the updated live posture state.
 
-* MPU6050 inertial measurement unit
-* ESP32 microcontroller
-* BLE communication
-* Vibration feedback
-* Status indicators
-* Battery-powered hardware
+If the posture now satisfies the readiness condition, the application changes the state to:
 
-The wearable measures the user's posture angle and communicates the live measurement to the application.
+Ready
 
-### Application Layer
+This creates a closed feedback loop between sensing, software evaluation, and user action.
 
-The mobile application:
+7. Activity Gate
 
-* Connects to the wearable through BLE
-* Receives the live posture angle
-* Performs the readiness check
-* Evaluates the configured threshold
-* Detects posture conflict
-* Guides the user toward correction
-* Allows the session to begin when readiness conditions are satisfied
+The readiness state acts as a gate before activity initiation.
 
-## 7. Design Principle
+The intended flow is:
 
-The Round 2 implementation intentionally keeps the readiness/conflict detection logic in the application layer.
+Readiness Check
+      │
+      ▼
+Posture Suitable?
+   │          │
+  NO         YES
+   │          │
+   ▼          ▼
+Conflict     Ready
+   │          │
+   ▼          ▼
+Correction  Activity
+   │         Starts
+   └──► Re-evaluate
 
-The existing wearable firmware remains responsible for sensing, processing, BLE communication, and physical feedback.
+The activity is therefore started only after the readiness condition has been satisfied.
 
-This allows the Round 2 feature to be demonstrated without requiring changes to the existing packed ESP32 firmware.
+8. Hardware Implementation
 
-## 8. Expected User Flow
+The wearable hardware contains the major sensing, processing, communication, power, and feedback components required by the system.
 
-1. User wears the Postura device.
-2. User connects the device to the application.
-3. User chooses to start an activity/session.
-4. The application requests a readiness check.
-5. The application reads the live posture angle.
-6. The posture is compared against the readiness threshold.
-7. If the posture is acceptable, the user can proceed.
-8. If the posture exceeds the threshold, a conflict is displayed.
-9. The user corrects their posture.
-10. The application evaluates the posture again.
-11. Once the posture is acceptable, the user can start the activity/session.
+Major Components
+ESP32 microcontroller
+MPU6050 IMU sensor
+Vibration motor
+Battery and charging circuitry
+Power management circuitry
+USB interface
+Status indicators
+Supporting passive components
 
-## 9. Scope of the Round 2 Prototype
+The hardware design is documented separately in:
 
-The Round 2 implementation focuses specifically on demonstrating the **Readiness Check / Conflict Detection** concept.
+hardware/
 
-It does not claim to provide medical diagnosis or clinical assessment.
+The repository contains the KiCad schematic design and visual PCB design evidence.
 
-The prototype demonstrates how live physical sensing can be converted into an application-level decision before an activity begins.
+9. Software Implementation
 
-## 10. Key Innovation
+The Postura application provides the software layer required for the Round 2 workflow.
 
-The key idea demonstrated in Round 2 is the transition from:
+The application handles:
 
-**"Detect bad posture"**
+BLE communication
+Live posture data
+Readiness Check
+Conflict Detection
+Posture correction state
+Ready state
+Activity/session initiation
 
-to:
+The application provides the user interface through which the complete workflow can be demonstrated.
 
-**"Check posture readiness before starting an activity."**
+10. Hardware–Software Integration
 
-This creates a preventive interaction rather than relying only on post-event correction.
+The solution combines physical sensing with application-level decision making.
+
+       PHYSICAL LAYER
+       
+      MPU6050 IMU
+           │
+           ▼
+         ESP32
+           │
+           │ BLE
+           ▼
+      SOFTWARE LAYER
+           
+      Postura App
+           │
+           ▼
+    Readiness Evaluation
+           │
+      ┌────┴────┐
+      │         │
+   Conflict    Ready
+      │         │
+      ▼         ▼
+ Correction  Activity
+      │        Start
+      └───► Re-evaluate
+
+This integration allows the physical wearable to provide live sensing while the application performs the Round 2 readiness evaluation.
+
+11. Technical Depth
+
+The solution combines multiple technical layers:
+
+Embedded System
+IMU-based posture sensing
+ESP32 processing
+Embedded control
+Physical feedback
+Wireless Communication
+Bluetooth Low Energy
+Wearable-to-application data transfer
+Mobile Software
+Flutter application
+BLE communication
+Real-time state handling
+Readiness evaluation
+User interface
+Hardware Design
+KiCad schematic
+Component integration
+Power management
+PCB-level design
+
+The project therefore spans both hardware and software rather than solving the problem using only a single application layer.
+
+12. Innovation
+
+The Round 2 contribution is not limited to detecting poor posture.
+
+Postura introduces a pre-activity readiness concept.
+
+Instead of:
+
+Activity
+   ↓
+Poor Posture
+   ↓
+Alert
+
+the Round 2 workflow introduces:
+
+Readiness Check
+       ↓
+Posture Conflict?
+    ↓       ↓
+   YES      NO
+    ↓        ↓
+Correct    Ready
+Posture      ↓
+    ↓      Activity
+Re-check    Starts
+
+This changes the interaction from purely reactive monitoring toward a preventive pre-activity check.
+
+13. Functionality
+
+The demonstrated Round 2 flow supports:
+
+BLE connection
+Live posture data
+Readiness Check
+Conflict Detection
+User posture correction
+Re-evaluation
+Ready state
+Activity initiation
+
+The complete workflow is demonstrated through the screenshots and demo documentation in:
+
+round-2/demo/
+14. Reliability Considerations
+
+The Round 2 prototype keeps the decision flow simple and observable.
+
+The application exposes distinct states:
+
+BLE Connected
+      ↓
+Readiness Check
+      ↓
+Conflict Detected
+      ↓
+Posture Corrected
+      ↓
+Ready
+      ↓
+Activity Started
+
+This makes the system behavior easy to understand and demonstrate.
+
+The readiness threshold is also explicitly defined for the prototype rather than being presented as a clinical standard.
+
+15. Scalability
+
+The readiness architecture can be extended in future versions.
+
+Possible extensions include:
+
+User-specific calibration
+Multiple activity profiles
+Adjustable readiness thresholds
+Historical posture analysis
+Personalized posture recommendations
+Session analytics
+Doctor/rehabilitation dashboards
+Institutional monitoring
+Additional wearable sensors
+
+The current Round 2 implementation focuses on demonstrating the core readiness and conflict-detection workflow.
+
+16. Documentation
+
+The repository contains supporting documentation for the project.
+
+Application
+app/
+Hardware
+hardware/
+Demo
+round-2/demo/
+Research
+docs/research.md
+System Architecture
+docs/system-architecture.md
+Firmware
+firmware/
+Screenshots
+round-2/demo/screenshots/
+17. Round 2 Demonstration Evidence
+
+The complete demonstration contains the following stages:
+
+Stage	Evidence
+BLE Connected	ble-connected.jpeg
+Readiness Check	readiness-check.jpeg
+Conflict Detected	conflict.jpeg
+Posture Corrected	corrected.jpeg
+Ready	ready.jpeg
+Activity Started	started.jpeg
+
+Detailed demonstration instructions are available in:
+
+round-2/demo/demo-link.md
+18. Alignment With Judging Parameters
+Task Implementation
+
+Postura directly implements a pre-activity readiness and conflict-detection workflow using live posture data from the wearable.
+
+Task Complexity
+
+The solution combines embedded sensing, wireless communication, mobile software, posture evaluation, physical feedback, and hardware design.
+
+Technical Execution
+
+The system integrates an MPU6050 IMU, ESP32, BLE communication, and Flutter application logic.
+
+Innovation & Creativity
+
+The Round 2 feature introduces a posture readiness gate before an activity begins rather than relying only on post-activity or continuous alerts.
+
+Functionality & Reliability
+
+The workflow provides observable states from BLE connection through readiness evaluation and activity initiation.
+
+Documentation & Presentation
+
+The repository contains dedicated documentation, hardware design files, system architecture, research material, demo instructions, and screenshot evidence.
+
+19. Final Solution
+
+Postura combines a wearable sensing system with an application-level readiness layer.
+
+The Round 2 solution can be summarized as:
+
+SENSE
+  ↓
+TRANSMIT
+  ↓
+EVALUATE
+  ↓
+DETECT CONFLICT
+  ↓
+CORRECT
+  ↓
+RE-EVALUATE
+  ↓
+READY
+  ↓
+START ACTIVITY
+
+The key Round 2 contribution is the ability to evaluate posture before an activity begins, creating a preventive readiness checkpoint between real-world sensing and activity initiation.
+
+20. Prototype Scope
+
+This implementation is a prototype demonstration of the Postura readiness workflow.
+
+The 15° threshold is a prototype configuration for the Round 2 demonstration and should not be interpreted as a universal medical or clinical threshold.
+
+Further validation with larger datasets, different users, activities, and clinical/ergonomic expertise would be required before making medical or clinical claims.
