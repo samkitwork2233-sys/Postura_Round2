@@ -1,96 +1,124 @@
-# Postura — Demo Evidence
+# Round 2 Demo Screenshots
 
-This folder contains visual evidence of the FAR AWAY 2026 Round 2 implementation.
+This folder contains visual evidence of the Postura implementation for **FAR AWAY 2026 — Round 2, Challenge #728: Operational Readiness: Conflict Check**.
 
-## Round 2 User Flow
+The screenshots demonstrate the complete user flow from connecting the wearable to starting an activity after resolving a detected conflict.
 
-The evidence should demonstrate the complete operational-readiness flow:
+## Demo Flow
 
-1. User prepares to start an activity.
-2. Postura performs a readiness check.
-3. The application evaluates the live posture state.
-4. A conflict is detected when the readiness condition is not satisfied.
-5. The conflict is presented before the user starts the activity.
-6. The user corrects the posture.
-7. The application evaluates the condition again.
-8. The user is allowed to proceed once the conflict is resolved.
+```text
+BLE Connected
+      ↓
+Readiness Check
+      ↓
+Conflict Detected
+      ↓
+Posture Corrected
+      ↓
+Ready
+      ↓
+Activity Started
+```
 
-## Required Evidence
+## Screenshots
 
-### 1. BLE Connection
+### 1. BLE Connected
 
-Show that the Postura application is connected to the physical wearable.
+**File:** `ble-connected.jpg`
 
-Suggested filename:
+Shows the Postura application connected to the wearable through Bluetooth Low Energy.
 
-`01-ble-connected.png`
+This establishes that the application is receiving data from the physical Postura device.
+
+---
 
 ### 2. Readiness Check
 
-Show the application immediately before or during the readiness evaluation.
+**File:** `readiness-check.jpg`
 
-Suggested filename:
+Shows the user initiating the readiness check before starting an activity or session.
 
-`02-readiness-check.png`
+The application evaluates the current live posture state at this point.
+
+---
 
 ### 3. Conflict Detected
 
-Show the application presenting the detected conflict before the activity/session starts.
+**File:** `conflict.jpg`
 
-Suggested filename:
+Shows the application detecting and presenting a conflict before the user starts the activity.
 
-`03-conflict-detected.png`
+This is the key Round 2 interaction.
 
-### 4. Posture Correction
+The conflict is presented before the user commits to the action.
 
-Show the user correcting the posture or the application displaying the corrected posture state.
+---
 
-Suggested filename:
+### 4. Posture Corrected
 
-`04-posture-corrected.png`
+**File:** `corrected.jpg`
 
-### 5. Ready State
+Shows the user correcting the posture after the conflict has been detected.
 
-Show that the conflict has been resolved and the user is ready to proceed.
+The application can then evaluate the updated posture state.
 
-Suggested filename:
+---
 
-`05-ready.png`
+### 5. Ready
+
+**File:** `ready.jpg`
+
+Shows that the readiness condition has been satisfied after correction.
+
+The user can now proceed with the activity or session.
+
+---
 
 ### 6. Activity Started
 
-Show the final state after the readiness condition has been satisfied and the activity/session can begin.
+**File:** `started.jpg`
 
-Suggested filename:
+Shows the final state after the readiness check has been successfully completed and the activity or session has started.
 
-`06-activity-started.png`
+---
+
+## Complete Round 2 Flow
+
+The screenshots together demonstrate:
+
+```text
+User prepares to start
+        ↓
+Readiness Check
+        ↓
+Conflict?
+   ┌────┴────┐
+   ↓         ↓
+  No        Yes
+   ↓         ↓
+ Ready     Conflict
+   │         ↓
+   │      Correction
+   │         ↓
+   │     Check Again
+   │         ↓
+   └────→ Ready
+             ↓
+       Activity Starts
+```
 
 ## Evidence Principle
 
-The screenshots should tell the story without requiring the judge to inspect the source code.
+These screenshots should show the **actual Postura application and actual prototype workflow**.
 
-The most important sequence is:
+They should not be manually edited or fabricated to represent functionality that has not been demonstrated.
 
-```text
-READY TO START
-      ↓
-READINESS CHECK
-      ↓
-CONFLICT DETECTED
-      ↓
-USER CORRECTS
-      ↓
-CHECK AGAIN
-      ↓
-READY
-      ↓
-ACTIVITY STARTS
-```
+The purpose of this evidence is to allow a judge to understand the Round 2 flow quickly without inspecting the entire source code.
 
-## Important
+## Round 2 Requirement
 
-The screenshots should represent the actual working Postura application.
+The evidence focuses on the core requirement of:
 
-Do not use mock screens or manually edited screenshots as evidence of functionality.
+**Readiness before an action → early conflict detection → conflict presented before commitment → correction → re-check → action.**
 
-If a particular state cannot currently be demonstrated, it should be identified as pending rather than presented as completed.
+The screenshots should therefore be evaluated as one continuous user flow rather than as unrelated application screens.
