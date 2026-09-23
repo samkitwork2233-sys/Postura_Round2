@@ -1,22 +1,28 @@
 # <img src="/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" width="40" height="40" style="border-radius: 50%; vertical-align: middle;" /> Postura
 
-## Wearable Posture Monitoring + Operational Readiness Conflict Check
+## AI-Powered Wearable Posture Monitoring System
 
-Postura is a wearable posture-monitoring system that combines physical sensing, embedded processing, Bluetooth Low Energy (BLE), physical feedback, and a Flutter companion application.
+Postura is a smart wearable posture-monitoring system designed to help users maintain a healthy posture in real time.
 
-For FAR AWAY 2026 — Round 2, Postura extends its existing wearable system with a **Readiness Check / Conflict Detection** layer.
+The system combines physical sensing, embedded processing, Bluetooth Low Energy (BLE), real-time posture analysis, physical feedback, and a Flutter-based companion application.
 
-The system evaluates the user's live posture before an activity or session begins. If the current posture does not satisfy the readiness condition, the application presents a conflict, asks the user to correct their posture, and re-checks the condition before allowing the activity to proceed.
+Postura continuously monitors the user's posture and detects incorrect or unhealthy posture patterns.
+
+When poor posture is detected, the system provides an immediate feedback alert to help the user correct their posture.
 
 ---
 
-# FAR AWAY 2026 — Round 2
+## Key Features
 
-## Challenge #728 — Operational Readiness: Conflict Check
+- Real-time posture monitoring
+- Wearable sensor-based posture detection
+- AI-assisted posture analysis
+- Instant physical feedback through vibration
+- Bluetooth Low Energy (BLE) connectivity
+- Flutter companion application
+- User-friendly monitoring and feedback experience
 
-The Round 2 challenge focuses on readiness before a major action or launch point, detecting conflicts early, presenting them before the user commits to the action, and demonstrating a complete user flow.
-
-### How Postura addresses the challenge
+## How Postura Works
 
 ```text
 User wants to start an activity
