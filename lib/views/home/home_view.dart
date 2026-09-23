@@ -53,15 +53,9 @@ class HomeView extends ConsumerWidget {
         },
         connectionStatus: postureState.connectionStatus,
         isSessionActive: postureState.isSessionActive,
-        isCalibrating: postureState.isCalibrating,
-        calibrationCountdown: postureState.calibrationCountdown,
-        calibrationError: postureState.calibrationError,
-        onStartSessionPressed: () => postureNotifier.startCalibration(),
+        onStartSessionPressed: () => postureNotifier.startSession(),
         onStopSessionPressed: () => postureNotifier.stopSessionAndSave(),
-        onCancelCalibrationPressed: () => postureNotifier.cancelCalibration(),
         onDisconnectPressed: () => postureNotifier.toggleConnection(),
-        minAngle: settings.minAngle,
-        maxAngle: settings.maxAngle,
       ),
     );
   }
